@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noeme's Resort</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --sage: #7a9e87;
+    --sage-light: #a8c5b0;
+    --sage-dark: #4d7a5e;
+    --cream: #f5f0e8;
+    --warm: #e8dfd0;
+    --warm-dark: #c4b49a;
+    --text-dark: #2c2a26;
+    --text-mid: #5a5650;
+    --text-light: #8a8680;
+    --white: #ffffff;
+    --card-bg: rgba(255,255,255,0.92);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+  /* ========== NAVIGATION ========== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(245,240,232,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(122,158,135,0.2);
+    padding: 1rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    animation: slideDown 0.8s ease forwards;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .logo { font-size: 1.4rem; color: var(--sage-dark); letter-spacing: 2px; font-weight: normal; flex-shrink: 0; }
+  .logo span { font-family: sans-serif; font-size: 0.65rem; display: block; letter-spacing: 4px; color: var(--text-light); font-weight: 300; text-transform: uppercase; margin-top: -2px; }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text-mid); font-family: sans-serif; font-size: 0.85rem; letter-spacing: 1px; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--sage-dark); }
+
+  .nav-book {
+    background: var(--sage-dark); color: white; border: none;
+    padding: 0.6rem 1.5rem; font-family: sans-serif; font-size: 0.85rem;
+    letter-spacing: 1px; cursor: pointer; border-radius: 2px;
+    transition: background 0.3s, transform 0.2s; white-space: nowrap;
+  }
+  .nav-book:hover { background: var(--sage); transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--text-dark); border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 999;
+    background: rgba(245,240,232,0.98); backdrop-filter: blur(12px);
+    flex-direction: column; padding: 1.5rem 2rem 2rem;
+    border-bottom: 1px solid rgba(122,158,135,0.2);
+    gap: 1.2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: var(--text-mid); font-family: sans-serif; font-size: 1rem; letter-spacing: 1px; padding: 0.4rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .mobile-menu .mob-book {
+    background: var(--sage-dark); color: white; border: none;
+    padding: 0.8rem; font-family: sans-serif; font-size: 0.9rem;
+    letter-spacing: 2px; cursor: pointer; border-radius: 2px; margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    position: relative; height: 100vh; min-height: 500px;
+    overflow: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  .hero-slides { position: absolute; inset: 0; }
+  .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease; }
+  .slide.active { opacity: 1; }
+  .slide-1 { background-image: url('YOUR_POOL_IMAGE.jpg'); }
+  .slide-2 { background-image: url('YOUR_LIVING_IMAGE.jpg'); }
+  .slide-3 { background-image: url('YOUR_DINING_IMAGE.jpg'); }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.5)); }
+
+  .hero-content {
+    position: relative; z-index: 2; text-align: center; color: white;
+    padding: 0 1.5rem;
+    opacity: 0; transform: translateY(40px);
+    animation: fadeUp 1.2s ease 0.5s forwards;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .hero-tag { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 1.2rem; }
+  .hero-title { font-size: clamp(2rem, 6vw, 4.5rem); font-weight: normal; line-height: 1.15; margin-bottom: 1rem; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+  .hero-sub { font-family: sans-serif; font-size: clamp(0.85rem, 2vw, 1rem); color: rgba(255,255,255,0.85); letter-spacing: 1px; margin-bottom: 2.5rem; }
+  .hero-cta {
+    display: inline-block; background: var(--sage); color: white;
+    padding: 1rem 2.5rem; font-family: sans-serif; font-size: 0.9rem;
+    letter-spacing: 2px; border: none; cursor: pointer;
+    transition: background 0.3s, transform 0.2s; border-radius: 2px;
+  }
+  .hero-cta:hover { background: var(--sage-dark); transform: translateY(-2px); }
+
+  .slide-dots { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: background 0.3s, transform 0.3s; border: none; }
+  .dot.active { background: white; transform: scale(1.2); }
+
+  /* ========== BOOKING BAR ========== */
+  .booking-wrap { background: var(--cream); padding: 0 3rem 4rem; }
+  .booking-bar {
+    background: var(--card-bg);
+    border: 1px solid rgba(122,158,135,0.25);
+    border-radius: 4px; padding: 1.5rem 2rem;
+    display: flex; gap: 1rem; align-items: flex-end;
+    max-width: 900px; margin: -3.5rem auto 0;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    flex-wrap: wrap; position: relative; z-index: 10;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+  .booking-field { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 130px; }
+  .booking-field label { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-light); }
+  .booking-field input, .booking-field select {
+    border: none; border-bottom: 1.5px solid var(--warm-dark);
+    background: transparent; padding: 0.4rem 0;
+    font-family: sans-serif; font-size: 0.9rem; color: var(--text-dark);
+    outline: none; transition: border-color 0.3s; cursor: pointer; width: 100%;
+  }
+  .booking-field input:focus, .booking-field select:focus { border-color: var(--sage); }
+  .book-btn {
+    background: var(--sage-dark); color: white; border: none;
+    padding: 0.8rem 2rem; font-family: sans-serif; font-size: 0.85rem;
+    letter-spacing: 2px; cursor: pointer; border-radius: 2px;
+    transition: background 0.3s, transform 0.2s; white-space: nowrap; width: 100%;
+  }
+  .book-btn:hover { background: var(--sage); transform: translateY(-1px); }
+
+  /* ========== SHARED ========== */
+  section { padding: 5rem 3rem; }
+  .section-tag { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: var(--sage); margin-bottom: 0.8rem; }
+  .section-title { font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: normal; color: var(--text-dark); line-height: 1.3; }
+  .section-line { width: 50px; height: 2px; background: var(--sage); margin: 1rem 0 1.5rem; }
+  .section-text { font-family: sans-serif; font-size: 0.95rem; color: var(--text-mid); line-height: 1.9; max-width: 600px; }
+
+  /* ========== ABOUT ========== */
+  .about { background: var(--white); }
+  .about-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .about-img { border-radius: 4px; overflow: hidden; }
+  .about-img img { width: 100%; height: 420px; object-fit: cover; display: block; transition: transform 0.6s ease; }
+  .about-img:hover img { transform: scale(1.04); }
+
+  /* ========== GALLERY ========== */
+  .gallery { background: var(--cream); }
+  .gallery-inner { max-width: 1100px; margin: 0 auto; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 280px 280px;
+    gap: 12px; margin-top: 2.5rem;
+  }
+  .g-item { overflow: hidden; border-radius: 4px; position: relative; }
+  .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+  .g-item:hover img { transform: scale(1.06); }
+  .g-item:first-child { grid-row: 1 / 3; }
+  .g-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    color: white; padding: 1.5rem 1rem 0.8rem;
+    font-family: sans-serif; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .g-item:hover .g-label { opacity: 1; }
+
+  /* ========== AMENITIES ========== */
+  .amenities { background: var(--white); }
+  .amenities-inner { max-width: 1080px; margin: 0 auto; }
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+  .amenity-card {
+    background: var(--cream);
+    border-radius: 6px;
+    padding: 2.2rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid rgba(122,158,135,0.18);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .amenity-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sage-light), var(--sage));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .amenity-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.09); border-color: var(--sage-light); background: var(--white); }
+  .amenity-card:hover::before { opacity: 1; }
+  .amenity-icon {
+    width: 48px; height: 48px;
+    background: rgba(122,158,135,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .amenity-card:hover .amenity-icon { background: rgba(122,158,135,0.22); }
+  .amenity-icon svg { width: 22px; height: 22px; stroke: var(--sage-dark); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .amenity-name { font-family: 'Georgia', serif; font-size: 1rem; color: var(--text-dark); font-weight: normal; margin-bottom: 0.5rem; letter-spacing: 0.3px; }
+  .amenity-desc { font-family: sans-serif; font-size: 0.82rem; color: var(--text-light); line-height: 1.75; }
+
+  /* ========== ROOMS ========== */
+  .rooms { background: var(--cream); }
+  .rooms-inner { max-width: 1100px; margin: 0 auto; }
+  .rooms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+  .room-card {
+    background: var(--white); border-radius: 4px; overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .room-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+  .room-img { height: 220px; overflow: hidden; position: relative; }
+  .room-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .room-card:hover .room-img img { transform: scale(1.05); }
+  .room-tag {
+    position: absolute; top: 1rem; left: 1rem;
+    background: var(--sage); color: white;
+    font-family: sans-serif; font-size: 0.7rem; letter-spacing: 1.5px;
+    padding: 0.3rem 0.8rem; border-radius: 2px;
+  }
+  .room-body { padding: 1.5rem; }
+  .room-name { font-size: 1.2rem; margin-bottom: 0.4rem; }
+  .room-desc { font-family: sans-serif; font-size: 0.85rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1rem; }
+  .room-price { font-family: sans-serif; font-size: 1.1rem; color: var(--sage-dark); font-weight: 600; }
+  .room-price span { font-size: 0.75rem; color: var(--text-light); font-weight: normal; }
+  .room-btn {
+    display: block; text-align: center; margin-top: 1rem;
+    background: transparent; border: 1.5px solid var(--sage);
+    color: var(--sage-dark); padding: 0.6rem;
+    font-family: sans-serif; font-size: 0.8rem; letter-spacing: 1.5px;
+    cursor: pointer; border-radius: 2px; width: 100%;
+    transition: background 0.3s, color 0.3s;
+  }
+  .room-btn:hover { background: var(--sage); color: white; }
+
+  /* ========== TESTIMONIALS ========== */
+  .testimonials { background: var(--sage-dark); color: white; }
+  .testimonials-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+  .testimonials .section-tag { color: var(--sage-light); }
+  .testimonials .section-title { color: white; }
+  .testimonials .section-line { background: var(--sage-light); margin: 1rem auto 1.5rem; }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+  .testi-card { background: rgba(255,255,255,0.1); border-radius: 4px; padding: 1.8rem; text-align: left; border: 1px solid rgba(255,255,255,0.15); }
+  .testi-stars { color: #f0c060; font-size: 0.9rem; margin-bottom: 0.8rem; }
+  .testi-text { font-family: sans-serif; font-size: 0.88rem; color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: 1rem; font-style: italic; }
+  .testi-name { font-family: sans-serif; font-size: 0.8rem; color: var(--sage-light); letter-spacing: 1px; }
+
+  /* ========== FOOTER ========== */
+  footer { background: var(--text-dark); color: rgba(255,255,255,0.7); padding: 3rem 2rem; text-align: center; }
+  .footer-logo { font-size: 1.8rem; color: var(--sage-light); margin-bottom: 0.5rem; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1rem 0; flex-wrap: wrap; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-family: sans-serif; font-size: 0.8rem; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--sage-light); }
+  .footer-text { font-family: sans-serif; font-size: 0.82rem; line-height: 1.8; }
+
+  /* ========== MODAL ========== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 2000;
+    background: rgba(40,38,32,0.65); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white); border-radius: 6px;
+    padding: 2rem; max-width: 550px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+    animation: modalIn 0.35s ease;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .modal-title { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .modal-sub { font-family: sans-serif; font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .form-group label { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); }
+  .form-group input, .form-group select {
+    padding: 0.7rem 0.8rem; border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 3px; font-family: sans-serif; font-size: 0.9rem;
+    outline: none; transition: border-color 0.3s; background: var(--cream); width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--sage); background: white; }
+  .submit-btn {
+    width: 100%; background: var(--sage-dark); color: white;
+    border: none; padding: 1rem; font-family: sans-serif;
+    font-size: 0.9rem; letter-spacing: 2px; cursor: pointer;
+    border-radius: 3px; transition: background 0.3s, transform 0.2s; margin-top: 0.5rem;
+  }
+  .submit-btn:hover { background: var(--sage); transform: translateY(-1px); }
+  .modal-close {
+    float: right; background: none; border: none; font-size: 1.3rem;
+    cursor: pointer; color: var(--text-light); transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text-dark); }
+  .success-msg { display: none; text-align: center; padding: 2rem 1rem; }
+  .success-msg h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--sage-dark); }
+  .success-msg p { font-family: sans-serif; font-size: 0.9rem; color: var(--text-mid); line-height: 1.7; }
+
+  /* ========== SCROLL ANIMATIONS ========== */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal-right.visible { opacity: 1; transform: translateX(0); }
+  .stagger > * { opacity: 0; transform: translateY(25px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+  .stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.1s; }
+  .stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.2s; }
+  .stagger.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.3s; }
+  .stagger.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.4s; }
+  .stagger.visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 0.5s; }
+
+  /* ================================================
+     TABLET — max-width: 1024px
+  ================================================ */
+  @media (max-width: 1024px) {
+    nav { padding: 1rem 2rem; }
+    .nav-links { gap: 1.2rem; }
+    section { padding: 4rem 2rem; }
+    .booking-wrap { padding: 0 2rem 3rem; }
+    .about-inner { gap: 2.5rem; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 220px 220px 220px; }
+    .g-item:first-child { grid-row: auto; grid-column: 1 / 3; }
+    .rooms-grid { grid-template-columns: repeat(2, 1fr); }
+    .amenities-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ================================================
+     MOBILE — max-width: 768px
+  ================================================ */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .nav-book { display: none; }
+    .hamburger { display: flex; }
+
+    .hero { height: 100svh; min-height: 480px; }
+    .hero-tag { font-size: 0.65rem; letter-spacing: 3px; }
+    .hero-sub { display: none; }
+    .hero-cta { padding: 0.85rem 2rem; font-size: 0.8rem; }
+
+    .booking-wrap { padding: 0 1.25rem 2.5rem; }
+    .booking-bar {
+      flex-direction: column; gap: 1.2rem;
+      margin-top: -2rem; padding: 1.25rem;
+    }
+    .booking-field { min-width: 100%; }
+    .book-btn { padding: 0.9rem; font-size: 0.9rem; }
+
+    section { padding: 3.5rem 1.25rem; }
+
+    .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .about-img img { height: 260px; }
+    .reveal-left { transform: translateY(20px); }
+    .reveal-right { transform: translateY(20px); }
+    .reveal-left.visible { transform: translateY(0); }
+    .reveal-right.visible { transform: translateY(0); }
+
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(5, 200px);
+      gap: 10px;
+    }
+    .g-item:first-child { grid-row: auto; grid-column: auto; }
+    .g-label { opacity: 1; }
+
+    .amenities-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .amenity-card { padding: 1.4rem 1rem; }
+
+    .rooms-grid { grid-template-columns: 1fr; }
+
+    .testi-grid { grid-template-columns: 1fr; }
+
+    .modal { padding: 1.5rem; border-radius: 4px; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+    .modal-title { font-size: 1.3rem; }
+
+    .footer-links { gap: 1rem; }
+  }
+
+  /* ================================================
+     SMALL MOBILE — max-width: 400px
+  ================================================ */
+  @media (max-width: 400px) {
+    .amenities-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 1.9rem; }
+    .section-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav>
+  <div class="logo">Noeme's Resort <span>Private Vacation Retreat</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#rooms">Rooms</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+  </ul>
+  <button class="nav-book" onclick="openModal()">Reserve Now</button>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#gallery" onclick="closeMobileMenu()">Gallery</a>
+  <a href="#rooms" onclick="closeMobileMenu()">Rooms</a>
+  <a href="#amenities" onclick="closeMobileMenu()">Amenities</a>
+  <button class="mob-book" onclick="closeMobileMenu(); openModal()">RESERVE NOW</button>
+</div>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-slides">
+    <div class="slide slide-1 active"></div>
+    <div class="slide slide-2"></div>
+    <div class="slide slide-3"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-tag">Welcome to Noeme's Resort</p>
+    <h1 class="hero-title">Your Private<br>Sanctuary Awaits</h1>
+    <p class="hero-sub">Pool &middot; Garden &middot; Modern Living &middot; Complete Privacy</p>
+    <button class="hero-cta" onclick="openModal()">Reserve Your Stay</button>
+  </div>
+  <div class="slide-dots">
+    <button class="dot active" onclick="goToSlide(0)"></button>
+    <button class="dot" onclick="goToSlide(1)"></button>
+    <button class="dot" onclick="goToSlide(2)"></button>
+  </div>
+</section>
+
+<!-- ========== BOOKING BAR ========== -->
+<div class="booking-wrap">
+  <div class="booking-bar">
+    <div class="booking-field">
+      <label>Check-in</label>
+      <input type="date" id="checkin" />
+    </div>
+    <div class="booking-field">
+      <label>Check-out</label>
+      <input type="date" id="checkout" />
+    </div>
+    <div class="booking-field">
+      <label>Guests</label>
+      <select>
+        <option>1 Guest</option>
+        <option>2 Guests</option>
+        <option>3 Guests</option>
+        <option>4+ Guests</option>
+      </select>
+    </div>
+    <button class="book-btn" onclick="openModal()">CHECK AVAILABILITY</button>
+  </div>
+</div>
+
+<!-- ========== ABOUT ========== -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="reveal-left about-img">
+      <!-- REPLACE with your image path -->
+      <img src="YOUR_ABOUT_IMAGE.jpg" alt="Living Area" />
+    </div>
+    <div class="reveal-right">
+      <p class="section-tag">Our Story</p>
+      <h2 class="section-title">A Home Designed<br>for Serenity</h2>
+      <div class="section-line"></div>
+      <p class="section-text"> Noeme's Resort is a thoughtfully designed private retreat blending modern architecture with natural warmth. Every detail &mdash; from the herringbone wood doors to the glowing pool at night &mdash; was crafted to offer you a true escape without leaving the city.</p>
+      <p class="section-text" style="margin-top: 1rem;">Whether you're here for a romantic getaway, a family celebration, or simply to unwind, we offer a fully private villa experience with all the comforts of a luxury home.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== GALLERY ========== -->
+<section class="gallery" id="gallery">
+  <div class="gallery-inner">
+    <div class="reveal" style="text-align: center;">
+      <p class="section-tag">Photo Gallery</p>
+      <h2 class="section-title">Every Corner, Curated</h2>
+      <div class="section-line" style="margin: 1rem auto 0;"></div>
+    </div>
+    <div class="gallery-grid stagger">
+      <!-- REPLACE all src values with your image paths -->
+      <div class="g-item">
+        <img src="YOUR_POOL_IMAGE.jpg" alt="Private Pool" />
+        <div class="g-label">Private Pool</div>
+      </div>
+      <div class="g-item">
+        <img src="YOUR_KITCHEN_IMAGE.jpg" alt="Kitchen" />
+        <div class="g-label">Gourmet Kitchen</div>
+      </div>
+      <div class="g-item">
+        <img src="YOUR_ALFRESCO_IMAGE.jpg" alt="Al Fresco" />
+        <div class="g-label">Al Fresco Dining</div>
+      </div>
+      <div class="g-item">
+        <img src="YOUR_BATHROOM_IMAGE.jpg" alt="Bathroom" />
+        <div class="g-label">Spa Bathroom</div>
+      </div>
+      <div class="g-item">
+        <img src="YOUR_DINING_IMAGE.jpg" alt="Dining" />
+        <div class="g-label">Dining &amp; Lounge</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== AMENITIES ========== -->
+<section class="amenities" id="amenities">
+  <div class="amenities-inner">
+    <div class="reveal" style="text-align: center;">
+      <p class="section-tag">What's Included</p>
+      <h2 class="section-title">All the Luxuries,<br>None of the Extras</h2>
+      <div class="section-line" style="margin: 1rem auto;"></div>
+      <p class="section-text" style="margin: 0 auto; text-align: center;">Everything included in your stay &mdash; no hidden fees.</p>
+    </div>
+    <div class="amenities-grid stagger">
+      <div class="amenity-card">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M2 12c0-4 3-7 7-7s7 3 7 7"/><path d="M2 17h20"/><path d="M6 17v2"/><path d="M18 17v2"/><path d="M9 12c0 1.7 1.3 3 3 3s3-1.3 3-3"/><circle cx="12" cy="8" r="1.5"/></svg>
+        </div>
+        <div class="amenity-name">Private Pool</div>
+        <div class="amenity-desc">Illuminated pool for your exclusive use, day and night</div>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9h18"/><path d="M3 15h18"/><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 5v14"/><path d="M15 5v14"/></svg>
+        </div>
+        <div class="amenity-name">Full Kitchen</div>
+        <div class="amenity-desc">Gourmet kitchen with island and all appliances</div>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 7h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M8 19v2"/><path d="M16 19v2"/></svg>
+        </div>
+        <div class="amenity-name">Cozy Bedrooms</div>
+        <div class="amenity-desc">Hotel-quality linens, blackout curtains, premium mattresses</div>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M7 3h10v4a5 5 0 0 1-10 0V3z"/><path d="M5 7H3"/><path d="M21 7h-2"/><path d="M12 12v9"/><path d="M8 21h8"/></svg>
+        </div>
+        <div class="amenity-name">Spa Bathroom</div>
+        <div class="amenity-desc">Designer bath with vessel sink, rain shower, gold fixtures</div>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 0 0-9 9c0 4 2.5 7.4 6 8.6V22h6v-2.4c3.5-1.2 6-4.6 6-8.6a9 9 0 0 0-9-9z"/><path d="M9 13c0 1.7 1.3 3 3 3s3-1.3 3-3"/></svg>
+        </div>
+        <div class="amenity-name">Garden &amp; Patio</div>
+        <div class="amenity-desc">Landscaped garden with al fresco dining for 6</div>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8h.01"/><path d="M12 8h.01"/><path d="M17 8h.01"/></svg>
+        </div>
+        <div class="amenity-name">Entertainment</div>
+        <div class="amenity-desc">Smart TV, high-speed WiFi, streaming ready throughout</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ROOMS ========== -->
+<section class="rooms" id="rooms">
+  <div class="rooms-inner">
+    <div class="reveal">
+      <p class="section-tag">Accommodations</p>
+      <h2 class="section-title">Choose Your Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="rooms-grid stagger">
+      <div class="room-card">
+        <div class="room-img">
+          <img src="YOUR_POOL_IMAGE.jpg" alt="Pool" />
+          <span class="room-tag">MOST POPULAR</span>
+        </div>
+        <div class="room-body">
+          <h3 class="room-name">Full Resort &mdash; Entire Home</h3>
+          <p class="room-desc">The complete Resort experience. Pool, garden, full kitchen, all bedrooms &mdash; the whole home is yours.</p>
+          <div class="room-price">&#8369;8,500 <span>/ night</span></div>
+          <button class="room-btn" onclick="openModal()">RESERVE THIS</button>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img">
+          <img src="YOUR_BEDROOM_IMAGE.jpg" alt="Bedroom" />
+          <span class="room-tag">COZY</span>
+        </div>
+        <div class="room-body">
+          <h3 class="room-name">Master Bedroom Suite</h3>
+          <p class="room-desc">Serene queen bedroom with plush linens, modern art, and access to shared common areas and pool.</p>
+          <div class="room-price">&#8369;3,500 <span>/ night</span></div>
+          <button class="room-btn" onclick="openModal()">RESERVE THIS</button>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img">
+          <img src="YOUR_PATIO_IMAGE.jpg" alt="Patio" />
+          <span class="room-tag">WEEKEND</span>
+        </div>
+        <div class="room-body">
+          <h3 class="room-name">Weekend Staycation Package</h3>
+          <p class="room-desc">Fri&ndash;Sun full resort access. Includes welcome setup, breakfast ingredients, and late checkout.</p>
+          <div class="room-price">&#8369;18,000 <span>/ weekend</span></div>
+          <button class="room-btn" onclick="openModal()">RESERVE THIS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <div class="reveal">
+      <p class="section-tag">Guest Reviews</p>
+      <h2 class="section-title">What Our Guests Say</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="testi-grid stagger">
+      <div class="testi-card">
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">"The pool at night was absolutely magical. We felt like we had our own private resort. Will definitely be back!"</p>
+        <div class="testi-name">&mdash; Maria C., Manila</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">"The kitchen and al fresco area are stunning. We cooked and dined outside under the stars &mdash; an unforgettable evening."</p>
+        <div class="testi-name">&mdash; James &amp; Lea, Cebu</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testi-text">"Impeccably designed and spotlessly clean. The bathroom is like a spa. Perfect for a romantic anniversary celebration."</p>
+        <div class="testi-name">&mdash; Andrea R., BGC</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-logo">Noeme's Resort</div>
+  <div class="footer-links">
+    <a href="#">Facebook</a>
+    <a href="#">Instagram</a>
+    <a href="#">Airbnb</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <p class="footer-text">&#169; 2026 Noeme's Resort Private Retreat &middot; All rights reserved</p>
+</footer>
+
+<!-- ========== BOOKING MODAL ========== -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div id="modal-form-content">
+      <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+      <h2 class="modal-title">Reserve Your Stay</h2>
+      <p class="modal-sub">Fill in your details and we'll confirm within 24 hours.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Maria" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Santos" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="maria@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+63 917 000 0000" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Check-in Date</label>
+          <input type="date" id="modal-checkin" />
+        </div>
+        <div class="form-group">
+          <label>Check-out Date</label>
+          <input type="date" id="modal-checkout" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Room / Package</label>
+          <select>
+            <option>Full Villa &mdash; Entire Home</option>
+            <option>Master Bedroom Suite</option>
+            <option>Weekend Staycation Package</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Number of Guests</label>
+          <select>
+            <option>1 Guest</option>
+            <option>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4 Guests</option>
+            <option>5+ Guests</option>
+          </select>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="submitBooking()">CONFIRM RESERVATION</button>
+    </div>
+    <div class="success-msg" id="success-msg">
+      <h3>Reservation Received!</h3>
+      <p>Thank you for choosing Noeme's Resort. We'll reach out to confirm your booking within 24 hours. We can't wait to welcome you!</p>
+      <button class="submit-btn" style="margin-top: 1.5rem;" onclick="closeModal()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+  // Hero slideshow
+  let slideIndex = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+
+  function goToSlide(index) {
+    slides[slideIndex].classList.remove('active');
+    dots[slideIndex].classList.remove('active');
+    slideIndex = index;
+    slides[slideIndex].classList.add('active');
+    dots[slideIndex].classList.add('active');
+  }
+
+  function nextSlide() {
+    goToSlide((slideIndex + 1) % slides.length);
+  }
+
+  let autoSlide = setInterval(nextSlide, 4500);
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      clearInterval(autoSlide);
+      goToSlide(i);
+      autoSlide = setInterval(nextSlide, 4500);
+    });
+  });
+
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMobileMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+
+  // Modal
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const ci = document.getElementById('checkin').value;
+    const co = document.getElementById('checkout').value;
+    if (ci) document.getElementById('modal-checkin').value = ci;
+    if (co) document.getElementById('modal-checkout').value = co;
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('modal-form-content').style.display = 'block';
+    document.getElementById('success-msg').style.display = 'none';
+  }
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+  function submitBooking() {
+    document.getElementById('modal-form-content').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+  }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
