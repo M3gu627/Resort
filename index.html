@@ -80,9 +80,9 @@
   .hero-slides { position: absolute; inset: 0; }
   .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease; }
   .slide.active { opacity: 1; }
-  .slide-1 { background-image: url('YOUR_POOL_IMAGE.jpg'); }
-  .slide-2 { background-image: url('YOUR_LIVING_IMAGE.jpg'); }
-  .slide-3 { background-image: url('YOUR_DINING_IMAGE.jpg'); }
+  .slide-1 { background-image: url('pool1.jpg'); }
+  .slide-2 { background-image: url('indoorview.jpg'); }
+  .slide-3 { background-image: url('outsideview.jpg'); }
   .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.5)); }
 
   .hero-content {
@@ -172,6 +172,46 @@
     opacity: 0; transition: opacity 0.3s;
   }
   .g-item:hover .g-label { opacity: 1; }
+
+  /* ========== FULL GALLERY ========== */
+  .full-gallery { margin-top: 3.5rem; display: flex; flex-direction: column; gap: 2.5rem; }
+  .fg-category { }
+  .fg-cat-label {
+    font-family: sans-serif; font-size: 0.75rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--sage-dark);
+    margin-bottom: 0.9rem; padding-bottom: 0.5rem;
+    border-bottom: 1.5px solid rgba(122,158,135,0.25);
+  }
+  .fg-row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 10px;
+    height: 220px;
+  }
+  .fg-item {
+    overflow: hidden; border-radius: 4px; position: relative;
+    height: 100%;
+  }
+  .fg-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.55s ease; }
+  .fg-item:hover img { transform: scale(1.07); }
+  .fg-item:hover .g-label { opacity: 1; }
+  .fg-item .g-label { opacity: 0; }
+
+  /* Bedrooms row — only 3 items, last is wider */
+  .fg-row.three-col {
+    grid-template-columns: 1.6fr 1fr 1fr;
+  }
+
+  @media (max-width: 1024px) {
+    .fg-row { grid-template-columns: 1fr 1fr; height: auto; }
+    .fg-item { height: 180px; }
+  }
+  @media (max-width: 768px) {
+    .fg-row { grid-template-columns: 1fr 1fr; height: auto; }
+    .fg-item { height: 150px; }
+    .fg-cat-label { font-size: 0.7rem; }
+    .full-gallery { gap: 2rem; }
+  }
 
   /* ========== AMENITIES ========== */
   .amenities { background: var(--white); }
@@ -483,7 +523,7 @@
   <div class="about-inner">
     <div class="reveal-left about-img">
       <!-- REPLACE with your image path -->
-      <img src="YOUR_ABOUT_IMAGE.jpg" alt="Living Area" />
+      <img src="outsideview2.jpg" alt="Living Area" />
     </div>
     <div class="reveal-right">
       <p class="section-tag">Our Story</p>
@@ -503,28 +543,139 @@
       <h2 class="section-title">Every Corner, Curated</h2>
       <div class="section-line" style="margin: 1rem auto 0;"></div>
     </div>
+    <!-- Featured 5-photo hero grid -->
     <div class="gallery-grid stagger">
-      <!-- REPLACE all src values with your image paths -->
       <div class="g-item">
-        <img src="YOUR_POOL_IMAGE.jpg" alt="Private Pool" />
+        <img src="pool1.jpg" alt="Private Pool" />
         <div class="g-label">Private Pool</div>
       </div>
       <div class="g-item">
-        <img src="YOUR_KITCHEN_IMAGE.jpg" alt="Kitchen" />
+        <img src="kitchen2.jpg" alt="Kitchen" />
         <div class="g-label">Gourmet Kitchen</div>
       </div>
       <div class="g-item">
-        <img src="YOUR_ALFRESCO_IMAGE.jpg" alt="Al Fresco" />
+        <img src="outsidetable1.jpg" alt="Al Fresco" />
         <div class="g-label">Al Fresco Dining</div>
       </div>
       <div class="g-item">
-        <img src="YOUR_BATHROOM_IMAGE.jpg" alt="Bathroom" />
+        <img src="restroom3_2.jpg" alt="Bathroom" />
         <div class="g-label">Spa Bathroom</div>
       </div>
       <div class="g-item">
-        <img src="YOUR_DINING_IMAGE.jpg" alt="Dining" />
+        <img src="diningtable.jpg" alt="Dining" />
         <div class="g-label">Dining &amp; Lounge</div>
       </div>
+    </div>
+
+    <!-- Full photo gallery - all rooms -->
+    <div class="full-gallery stagger">
+
+      <div class="fg-category">
+        <p class="fg-cat-label">🏊 Pool &amp; Outdoor</p>
+        <div class="fg-row">
+          <div class="fg-item">
+            <img src="outsideview2.jpg" alt="Pool Overview" />
+            <div class="g-label">Pool Overview</div>
+          </div>
+          <div class="fg-item">
+            <img src="pool2.jpg" alt="Pool Lounge" />
+            <div class="g-label">Pool Lounge</div>
+          </div>
+          <div class="fg-item">
+            <img src="pool1.jpg" alt="Private Pool" />
+            <div class="g-label">Private Pool</div>
+          </div>
+          <div class="fg-item">
+            <img src="outsideview.jpg" alt="Sunset Pool" />
+            <div class="g-label">Sunset View</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fg-category">
+        <p class="fg-cat-label">🛋 Living &amp; Dining</p>
+        <div class="fg-row">
+          <div class="fg-item">
+            <img src="indoorview.jpg" alt="Living Area" />
+            <div class="g-label">Living Area</div>
+          </div>
+          <div class="fg-item">
+            <img src="indoor1.jpg" alt="Lounge" />
+            <div class="g-label">Lounge View</div>
+          </div>
+          <div class="fg-item">
+            <img src="indoor2.jpg" alt="Living Space" />
+            <div class="g-label">Pool View from Inside</div>
+          </div>
+          <div class="fg-item">
+            <img src="diningtable.jpg" alt="Dining Table" />
+            <div class="g-label">Dining Area</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fg-category">
+        <p class="fg-cat-label">🍳 Kitchen &amp; Al Fresco</p>
+        <div class="fg-row">
+          <div class="fg-item">
+            <img src="outsidekitchen.jpg" alt="Al Fresco Kitchen" />
+            <div class="g-label">Al Fresco Kitchen</div>
+          </div>
+          <div class="fg-item">
+            <img src="kitchen.jpg" alt="Kitchen Island" />
+            <div class="g-label">Kitchen Island</div>
+          </div>
+          <div class="fg-item">
+            <img src="kitchen2.jpg" alt="Full Kitchen" />
+            <div class="g-label">Full Kitchen</div>
+          </div>
+          <div class="fg-item">
+            <img src="outsidetable1.jpg" alt="Outside Table" />
+            <div class="g-label">Al Fresco Dining</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fg-category">
+        <p class="fg-cat-label">🛏 Bedrooms</p>
+        <div class="fg-row" style="grid-template-columns: 1.6fr 1fr 1fr;">
+          <div class="fg-item">
+            <img src="room1.jpg" alt="Bedroom" />
+            <div class="g-label">Main Bedroom</div>
+          </div>
+          <div class="fg-item">
+            <img src="room1_2.jpg" alt="Bedroom View 2" />
+            <div class="g-label">Bedroom View</div>
+          </div>
+          <div class="fg-item">
+            <img src="sidelounge.jpg" alt="Side Lounge" />
+            <div class="g-label">Side Lounge</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fg-category">
+        <p class="fg-cat-label">🚿 Bathrooms</p>
+        <div class="fg-row">
+          <div class="fg-item">
+            <img src="restroom3.jpg" alt="Master Bathroom" />
+            <div class="g-label">Master Bathroom</div>
+          </div>
+          <div class="fg-item">
+            <img src="restroom3_2.jpg" alt="Bathroom Shower" />
+            <div class="g-label">Rain Shower</div>
+          </div>
+          <div class="fg-item">
+            <img src="restroom2.jpg" alt="Bathroom 2" />
+            <div class="g-label">Bathroom 2</div>
+          </div>
+          <div class="fg-item">
+            <img src="restroom1.jpg" alt="Bathroom 3" />
+            <div class="g-label">Bathroom 3</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -596,7 +747,7 @@
     <div class="rooms-grid stagger">
       <div class="room-card">
         <div class="room-img">
-          <img src="YOUR_POOL_IMAGE.jpg" alt="Pool" />
+          <img src="pool1.jpg" alt="Pool" />
           <span class="room-tag">MOST POPULAR</span>
         </div>
         <div class="room-body">
@@ -608,7 +759,7 @@
       </div>
       <div class="room-card">
         <div class="room-img">
-          <img src="YOUR_BEDROOM_IMAGE.jpg" alt="Bedroom" />
+          <img src="room1.jpg" alt="Bedroom" />
           <span class="room-tag">COZY</span>
         </div>
         <div class="room-body">
@@ -620,7 +771,7 @@
       </div>
       <div class="room-card">
         <div class="room-img">
-          <img src="YOUR_PATIO_IMAGE.jpg" alt="Patio" />
+          <img src="outsidekitchen.jpg" alt="Patio" />
           <span class="room-tag">WEEKEND</span>
         </div>
         <div class="room-body">
