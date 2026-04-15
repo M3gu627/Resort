@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Noeme's Resort</title>
+<title>Guanzon's Private Pool</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -94,7 +94,8 @@
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
   .hero-tag { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 1.2rem; }
   .hero-title { font-size: clamp(2rem, 6vw, 4.5rem); font-weight: normal; line-height: 1.15; margin-bottom: 1rem; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
-  .hero-sub { font-family: sans-serif; font-size: clamp(0.85rem, 2vw, 1rem); color: rgba(255,255,255,0.85); letter-spacing: 1px; margin-bottom: 2.5rem; }
+  .hero-sub { font-family: sans-serif; font-size: clamp(0.85rem, 2vw, 1rem); color: rgba(255,255,255,0.85); letter-spacing: 1px; margin-bottom: 1rem; }
+  .hero-psalm { font-family: 'Georgia', serif; font-size: clamp(0.8rem, 1.8vw, 1rem); color: rgba(255,255,255,0.75); letter-spacing: 0.5px; margin-bottom: 2rem; font-style: italic; }
   .hero-cta {
     display: inline-block; background: var(--sage); color: white;
     padding: 1rem 2.5rem; font-family: sans-serif; font-size: 0.9rem;
@@ -451,7 +452,7 @@
 
 <!-- ========== NAVIGATION ========== -->
 <nav>
-  <div class="logo">Noeme's Resort <span>Private Vacation Retreat</span></div>
+  <div class="logo">Guanzon's Private Pool <span>Private Vacation Retreat</span></div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#gallery">Gallery</a></li>
@@ -482,9 +483,10 @@
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <p class="hero-tag">Welcome to Noeme's Resort</p>
+    <p class="hero-tag">Welcome to Guanzon's Private Pool</p>
     <h1 class="hero-title">Your Private<br>Sanctuary Awaits</h1>
     <p class="hero-sub">Pool &middot; Garden &middot; Modern Living &middot; Complete Privacy</p>
+    <p class="hero-psalm"><em>"He leads me beside quiet waters"</em> &mdash; Psalms 23:2</p>
     <button class="hero-cta" onclick="openModal()">Reserve Your Stay</button>
   </div>
   <div class="slide-dots">
@@ -529,8 +531,12 @@
       <p class="section-tag">Our Story</p>
       <h2 class="section-title">A Home Designed<br>for Serenity</h2>
       <div class="section-line"></div>
-      <p class="section-text"> Noeme's Resort is a thoughtfully designed private retreat blending modern architecture with natural warmth. Every detail &mdash; from the herringbone wood doors to the glowing pool at night &mdash; was crafted to offer you a true escape without leaving the city.</p>
+      <p class="section-text"> Guanzon's Private Pool is a thoughtfully designed private retreat blending modern architecture with natural warmth. Every detail &mdash; from the herringbone wood doors to the glowing pool at night &mdash; was crafted to offer you a true escape without leaving the city.</p>
       <p class="section-text" style="margin-top: 1rem;">Whether you're here for a romantic getaway, a family celebration, or simply to unwind, we offer a fully private villa experience with all the comforts of a luxury home.</p>
+      <p class="section-text" style="margin-top: 1.2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;color:var(--sage-dark);"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Katarungan, Cambaog, Bustos Bulacan &mdash; Beside Villa Nicolas
+      </p>
     </div>
   </div>
 </section>
@@ -811,14 +817,18 @@
 
 <!-- ========== FOOTER ========== -->
 <footer>
-  <div class="footer-logo">Noeme's Resort</div>
+  <div class="footer-logo">Guanzon's Private Pool</div>
+  <p style="font-family:'Georgia',serif; font-style:italic; font-size:0.88rem; color:var(--sage-light); margin-bottom:0.8rem;">"He leads me beside quiet waters" &mdash; Psalms 23:2</p>
+  <p style="font-family:sans-serif; font-size:0.82rem; color:rgba(255,255,255,0.5); margin-bottom:0.8rem;">
+    📍 Katarungan, Cambaog, Bustos Bulacan &mdash; Beside Villa Nicolas
+  </p>
   <div class="footer-links">
     <a href="#">Facebook</a>
     <a href="#">Instagram</a>
     <a href="#">Airbnb</a>
     <a href="#">Contact Us</a>
   </div>
-  <p class="footer-text">&#169; 2026 Noeme's Resort Private Retreat &middot; All rights reserved</p>
+  <p class="footer-text">&#169; 2026 Guanzon's Private Pool Private Retreat &middot; All rights reserved</p>
 </footer>
 
 <!-- ========== BOOKING MODAL ========== -->
@@ -880,7 +890,7 @@
     </div>
     <div class="success-msg" id="success-msg">
       <h3>Reservation Received!</h3>
-      <p>Thank you for choosing Noeme's Resort. We'll reach out to confirm your booking within 24 hours. We can't wait to welcome you!</p>
+      <p>Thank you for choosing Guanzon's Private Pool. We'll reach out to confirm your booking within 24 hours. We can't wait to welcome you!</p>
       <button class="submit-btn" style="margin-top: 1.5rem;" onclick="closeModal()">CLOSE</button>
     </div>
   </div>
