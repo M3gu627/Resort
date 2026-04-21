@@ -746,40 +746,30 @@
       <h2 class="section-title">Choose Your Experience</h2>
       <div class="section-line"></div>
     </div>
-    <div class="rooms-grid stagger">
+    <div class="rooms-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 780px; margin-left: auto; margin-right: auto;">
       <div class="room-card">
         <div class="room-img">
           <img src="pool1.jpg" alt="Pool" />
           <span class="room-tag">MOST POPULAR</span>
         </div>
         <div class="room-body">
-          <h3 class="room-name">Full Resort &mdash; Entire Home</h3>
-          <p class="room-desc">The complete Resort experience. Pool, garden, full kitchen, all bedrooms &mdash; the whole home is yours.</p>
+          <h3 class="room-name">Overnight &mdash; Full Villa</h3>
+          <p class="room-desc">Available Monday to Sunday. Check-in at 2:00 PM, check-out at 11:00 AM. The whole villa is exclusively yours.</p>
           <div class="room-price">&#8369;8,500 <span>/ night</span></div>
+          <div style="font-family:sans-serif; font-size:0.78rem; color:var(--text-light); margin-bottom:0.8rem;">Mon &ndash; Sun &nbsp;|&nbsp; 2:00 PM &ndash; 11:00 AM</div>
           <button class="room-btn" onclick="openModal()">RESERVE THIS</button>
         </div>
       </div>
       <div class="room-card">
         <div class="room-img">
-          <img src="room1.jpg" alt="Bedroom" />
-          <span class="room-tag">COZY</span>
+          <img src="outsidekitchen.jpg" alt="Day Tour" />
+          <span class="room-tag">DAY TOUR</span>
         </div>
         <div class="room-body">
-          <h3 class="room-name">Master Bedroom Suite</h3>
-          <p class="room-desc">Serene queen bedroom with plush linens, modern art, and access to shared common areas and pool.</p>
-          <div class="room-price">&#8369;3,500 <span>/ night</span></div>
-          <button class="room-btn" onclick="openModal()">RESERVE THIS</button>
-        </div>
-      </div>
-      <div class="room-card">
-        <div class="room-img">
-          <img src="outsidekitchen.jpg" alt="Patio" />
-          <span class="room-tag">WEEKEND</span>
-        </div>
-        <div class="room-body">
-          <h3 class="room-name">Weekend Staycation Package</h3>
-          <p class="room-desc">Fri&ndash;Sun full resort access. Includes welcome setup, breakfast ingredients, and late checkout.</p>
-          <div class="room-price">&#8369;18,000 <span>/ weekend</span></div>
+          <h3 class="room-name">Day Tour &mdash; Full Villa</h3>
+          <p class="room-desc">Available Monday to Thursday only. Enjoy the pool, garden, and all villa amenities for a full day of relaxation.</p>
+          <div class="room-price">&#8369;6,500 <span>/ day</span></div>
+          <div style="font-family:sans-serif; font-size:0.78rem; color:var(--text-light); margin-bottom:0.8rem;">Mon &ndash; Thu &nbsp;|&nbsp; 8:00 AM &ndash; 6:00 PM</div>
           <button class="room-btn" onclick="openModal()">RESERVE THIS</button>
         </div>
       </div>
@@ -870,9 +860,8 @@
         <div class="form-group">
           <label>Room / Package</label>
           <select>
-            <option>Full Villa &mdash; Entire Home</option>
-            <option>Master Bedroom Suite</option>
-            <option>Weekend Staycation Package</option>
+            <option>Overnight &mdash; Full Villa (2PM&ndash;11AM) &mdash; &#8369;8,500</option>
+            <option>Day Tour &mdash; Full Villa (8AM&ndash;6PM) &mdash; &#8369;6,500</option>
           </select>
         </div>
         <div class="form-group">
