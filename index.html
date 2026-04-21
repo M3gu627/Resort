@@ -846,15 +846,13 @@
         <label>Phone Number</label>
         <input type="tel" id="f-phone" placeholder="+63 917 000 0000" />
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Check-in Date</label>
-          <input type="date" id="modal-checkin" />
-        </div>
-        <div class="form-group">
-          <label>Check-out Date</label>
-          <input type="date" id="modal-checkout" />
-        </div>
+      <div class="form-group">
+        <label>Preferred Date</label>
+        <input type="date" id="modal-date" />
+      </div>
+      <div class="form-group">
+        <label>Message / Special Requests</label>
+        <textarea id="f-description" placeholder="Tell us about your occasion, special requests, or anything we should know..." rows="3" style="padding:0.7rem 0.8rem; border:1px solid rgba(0,0,0,0.15); border-radius:3px; font-family:sans-serif; font-size:0.9rem; color:#2c2a26; background:#f5f0e8; width:100%; resize:vertical; outline:none; transition:border-color 0.3s;" onfocus="this.style.borderColor='#7a9e87';this.style.background='#fff'" onblur="this.style.borderColor='rgba(0,0,0,0.15)';this.style.background='#f5f0e8'"></textarea>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -951,10 +949,6 @@
   function openModal() {
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow = 'hidden';
-    const ci = document.getElementById('checkin').value;
-    const co = document.getElementById('checkout').value;
-    if (ci) document.getElementById('modal-checkin').value = ci;
-    if (co) document.getElementById('modal-checkout').value = co;
     // Reset form state
     document.getElementById('form-error').style.display = 'none';
     const btn = document.getElementById('submit-btn');
@@ -981,21 +975,21 @@
 
   async function submitBooking() {
     // Collect values
-    const firstName = document.getElementById('f-firstname').value.trim();
-    const lastName  = document.getElementById('f-lastname').value.trim();
-    const email     = document.getElementById('f-email').value.trim();
-    const phone     = document.getElementById('f-phone').value.trim();
-    const checkin   = document.getElementById('modal-checkin').value;
-    const checkout  = document.getElementById('modal-checkout').value;
-    const pkg       = document.getElementById('f-package').value;
-    const guests    = document.getElementById('f-guests').value;
+    const firstName   = document.getElementById('f-firstname').value.trim();
+    const lastName    = document.getElementById('f-lastname').value.trim();
+    const email       = document.getElementById('f-email').value.trim();
+    const phone       = document.getElementById('f-phone').value.trim();
+    const date        = document.getElementById('modal-date').value;
+    const description = document.getElementById('f-description').value.trim();
+    const pkg         = document.getElementById('f-package').value;
+    const guests      = document.getElementById('f-guests').value;
 
     // Validation
     document.getElementById('form-error').style.display = 'none';
     if (!firstName || !lastName) return showError('Please enter your full name.');
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Please enter a valid email address.');
     if (!phone) return showError('Please enter your phone number.');
-    if (!checkin) return showError('Please select a check-in date.');
+    if (!date) return showError('Please select your preferred date.');
 
     // Button loading state
     const btn = document.getElementById('submit-btn');
@@ -1003,14 +997,14 @@
     btn.disabled = true;
 
     const templateParams = {
-      from_name:  `${firstName} ${lastName}`,
-      from_email: email,
-      phone:      phone,
-      checkin:    checkin,
-      checkout:   checkout || 'N/A',
-      package:    pkg,
-      guests:     guests,
-      reply_to:   email,
+      from_name:   `${firstName} ${lastName}`,
+      from_email:  email,
+      phone:       phone,
+      date:        date,
+      description: description || 'No special requests.',
+      package:     pkg,
+      guests:      guests,
+      reply_to:    email,
     };
 
     try {
