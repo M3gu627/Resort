@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guanzon's Private Pool</title>
+
+<!-- ========== SECURITY HEADERS (via meta — GitHub Pages compatible) ========== -->
+<!-- Content-Security-Policy: restricts where scripts/styles/images can load from -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src  'self' 'unsafe-inline' cdn.jsdelivr.net;
+  style-src   'self' 'unsafe-inline';
+  img-src     'self' data: blob:;
+  font-src    'self';
+  connect-src 'self' https://api.emailjs.com https://smtp.emailjs.com;
+  frame-ancestors 'none';
+">
+<!-- Referrer-Policy: controls how much URL info is sent when clicking links -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- NOTE: HSTS, X-Frame-Options, X-Content-Type-Options need Cloudflare — see bottom of file -->
+<!-- ============================================================================ -->
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -198,10 +215,7 @@
   .fg-item:hover .g-label { opacity: 1; }
   .fg-item .g-label { opacity: 0; }
 
-  /* Bedrooms row — only 3 items, last is wider */
-  .fg-row.three-col {
-    grid-template-columns: 1.6fr 1fr 1fr;
-  }
+  .fg-row.three-col { grid-template-columns: 1.6fr 1fr 1fr; }
 
   @media (max-width: 1024px) {
     .fg-row { grid-template-columns: 1fr 1fr; height: auto; }
@@ -524,7 +538,6 @@
 <section class="about" id="about">
   <div class="about-inner">
     <div class="reveal-left about-img">
-      <!-- REPLACE with your image path -->
       <img src="outsideview2.jpg" alt="Living Area" />
     </div>
     <div class="reveal-right">
@@ -549,7 +562,6 @@
       <h2 class="section-title">Every Corner, Curated</h2>
       <div class="section-line" style="margin: 1rem auto 0;"></div>
     </div>
-    <!-- Featured 5-photo hero grid -->
     <div class="gallery-grid stagger">
       <div class="g-item">
         <img src="pool1.jpg" alt="Private Pool" />
@@ -573,7 +585,6 @@
       </div>
     </div>
 
-    <!-- Full photo gallery - all rooms -->
     <div class="full-gallery stagger">
 
       <div class="fg-category">
@@ -890,7 +901,6 @@
 <!-- ========== SCRIPTS ========== -->
 <script>
   // ─── EMAILJS CONFIG ─────────────────────────────────────────────
-  // Replace these 3 values with your own from emailjs.com
   const EMAILJS_PUBLIC_KEY  = 'HpAz5a_OP97O-dOhE';
   const EMAILJS_SERVICE_ID  = 'service_22s6tf2';
   const EMAILJS_TEMPLATE_ID = 'template_46gzi75';
@@ -949,7 +959,6 @@
   function openModal() {
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow = 'hidden';
-    // Reset form state
     document.getElementById('form-error').style.display = 'none';
     const btn = document.getElementById('submit-btn');
     btn.textContent = 'CONFIRM RESERVATION';
@@ -974,7 +983,6 @@
   }
 
   async function submitBooking() {
-    // Collect values
     const firstName   = document.getElementById('f-firstname').value.trim();
     const lastName    = document.getElementById('f-lastname').value.trim();
     const email       = document.getElementById('f-email').value.trim();
@@ -984,14 +992,12 @@
     const pkg         = document.getElementById('f-package').value;
     const guests      = document.getElementById('f-guests').value;
 
-    // Validation
     document.getElementById('form-error').style.display = 'none';
     if (!firstName || !lastName) return showError('Please enter your full name.');
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Please enter a valid email address.');
     if (!phone) return showError('Please enter your phone number.');
     if (!date) return showError('Please select your preferred date.');
 
-    // Button loading state
     const btn = document.getElementById('submit-btn');
     btn.textContent = 'SENDING...';
     btn.disabled = true;
@@ -1009,7 +1015,6 @@
 
     try {
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-      // Success
       document.getElementById('modal-form-content').style.display = 'none';
       document.getElementById('success-msg').style.display = 'block';
     } catch (err) {
@@ -1032,5 +1037,33 @@
   }, { threshold: 0.1 });
   revealEls.forEach(el => observer.observe(el));
 </script>
+
+<!--
+=================================================================
+  CLOUDFLARE SETUP — fixes the remaining 4 headers
+  (free account, takes ~5 minutes)
+=================================================================
+
+  STEP 1: Go to https://dash.cloudflare.com
+          Add your site → follow the nameserver change instructions
+
+  STEP 2: In Cloudflare dashboard go to:
+          Rules → Transform Rules → Modify Response Header → Create Rule
+
+  STEP 3: Add ALL 4 of these headers (set action = "Set"):
+
+  Header Name                   Value
+  ────────────────────────────  ──────────────────────────────────────
+  Strict-Transport-Security     max-age=31536000; includeSubDomains
+  X-Frame-Options               DENY
+  X-Content-Type-Options        nosniff
+  Permissions-Policy            camera=(), microphone=(), geolocation=()
+
+  STEP 4: Set the rule to match: hostname equals guanzonpool.com
+          Save and deploy.
+
+  After doing Cloudflare + this HTML file, your score should reach A or B.
+=================================================================
+-->
 </body>
 </html>
